@@ -1,7 +1,9 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:tflite/tflite.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mood_detectionapp/services/tflite_services.dart';
+import 'package:tflite/tflite.dart';
 
 class Emotion_detection extends StatefulWidget {
   @override
@@ -9,6 +11,8 @@ class Emotion_detection extends StatefulWidget {
 }
 
 class _Emotion_detectionState extends State<Emotion_detection> {
+  //tflite services
+  TfLiteServices tfLite = TfLiteServices();
   // Variables
   bool _loading = true;
   // variable to store loaded image
@@ -23,33 +27,21 @@ class _Emotion_detectionState extends State<Emotion_detection> {
   void initState() {
     super.initState();
     // load TFLite Model
-    loadModel().then((value) {
-      setState(() {});
-    });
+    tfLite.loadModel();
   }
 
   // Function to perform TFLite Inference
   classifyImage(File image) async {
-    var output = await Tflite.runModelOnImage(
-        path: image.path,
-        numResults: 10,
-        threshold: 0.5,
-        imageMean: 127.5,
-        imageStd: 127.5,
-        asynch: true);
+    setState(() {
+      _loading = true;
+    });
+    var output = await tfLite.runOnImage(image);
     setState(() {
       // set our global variable equal to local variable
       _output = output;
       _loading = false;
     });
     print("prediction: $_output");
-  }
-
-  // Function to Load Model
-  loadModel() async {
-    // define model path and labels path
-    await Tflite.loadModel(
-        model: 'assets/converted_model.tflite', labels: 'assets/label.txt');
   }
 
   // Function to dispose and clear mmemory once done inferring
@@ -124,39 +116,39 @@ class _Emotion_detectionState extends State<Emotion_detection> {
             Center(
               child: _loading
                   ? Container(
-                width: 280,
-                child: Column(
-                  children: [
-                    Image.asset('assets/cat.jpg'),
-                    SizedBox(
-                      height: 50,
+                      width: 280,
+                      child: Column(
+                        children: [
+                          Image.asset('assets/cat.jpg'),
+                          SizedBox(
+                            height: 50,
+                          )
+                        ],
+                      ),
                     )
-                  ],
-                ),
-              )
                   : Container(
-                child: Column(
-                  children: [
-                    Container(
-                      height: 250,
-                      child: Image.file(_image),
+                      child: Column(
+                        children: [
+                          Container(
+                            height: 250,
+                            child: Image.file(_image),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          _output != null
+                              ? Text(
+                                  'Predicted Label: ${_output[0]['label']}',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 20),
+                                )
+                              : Container(),
+                          SizedBox(
+                            height: 10,
+                          )
+                        ],
+                      ),
                     ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _output != null
-                        ? Text(
-                      'Predicted Label: ${_output[0]['label']}',
-                      style: TextStyle(
-                          color: Colors.white, fontSize: 20),
-                    )
-                        : Container(),
-                    SizedBox(
-                      height: 10,
-                    )
-                  ],
-                ),
-              ),
             ),
             Container(
               width: MediaQuery.of(context).size.width,
@@ -168,7 +160,7 @@ class _Emotion_detectionState extends State<Emotion_detection> {
                       width: MediaQuery.of(context).size.width - 150,
                       alignment: Alignment.center,
                       padding:
-                      EdgeInsets.symmetric(horizontal: 24, vertical: 17),
+                          EdgeInsets.symmetric(horizontal: 24, vertical: 17),
                       decoration: BoxDecoration(
                         color: Color(0xFFE99600),
                         borderRadius: BorderRadius.circular(6),
@@ -188,7 +180,7 @@ class _Emotion_detectionState extends State<Emotion_detection> {
                       width: MediaQuery.of(context).size.width - 150,
                       alignment: Alignment.center,
                       padding:
-                      EdgeInsets.symmetric(horizontal: 24, vertical: 17),
+                          EdgeInsets.symmetric(horizontal: 24, vertical: 17),
                       decoration: BoxDecoration(
                         color: Color(0xFFE99600),
                         borderRadius: BorderRadius.circular(6),

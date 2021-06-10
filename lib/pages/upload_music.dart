@@ -1,4 +1,12 @@
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:mood_detectionapp/models/audio.dart';
+import 'package:mood_detectionapp/services/file_picker.dart';
+import 'package:mood_detectionapp/services/firestorage_service.dart';
+import 'package:mood_detectionapp/utils/global.dart';
 
 class UploadMusic extends StatefulWidget {
   @override
@@ -6,6 +14,12 @@ class UploadMusic extends StatefulWidget {
 }
 
 class _UploadMusicState extends State<UploadMusic> {
+  File pickedFile;
+  FilePickerServices _filePicker = FilePickerServices();
+  FStorageServices _storageServices = FStorageServices();
+  FirebaseFirestore db = FirebaseFirestore.instance;
+  bool isLoading = false;
+  String seletedCat = "";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -14,12 +28,74 @@ class _UploadMusicState extends State<UploadMusic> {
         title: Text('Upload Music'),
         elevation: 0,
       ),
-      body: Center(
-        child: Text(
-          "n",
-          style: TextStyle(color: Colors.red[900], fontSize: 28),
-        ),
-      ),
+      body: isLoading
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                children: [pickedFile == null ? picker() : picked()],
+              ),
+            ),
     );
+  }
+
+  Widget picker() {
+    return Column(
+      children: [
+        Text("Select category below to upload music"),
+        Expanded(
+          child: ListView(
+            children: List.generate(allCategories.length, (index) {
+              return ListTile(
+                title: Text(allCategories[index]),
+                onTap: () {
+                  seletedCat = allCategories[index];
+                  onUploadTapped();
+                },
+              );
+            }),
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget picked() {}
+
+  //functions
+  onUploadTapped() async {
+    File file = await _filePicker.pickSingleFile();
+    if (file != null) {
+      try {
+        setState(() {
+          isLoading = true;
+        });
+        String url = await _storageServices.uploadSingleFile(
+            bucketName: 'audios', userEmail: AppUser.data.email, file: file);
+        setState(() {
+          isLoading = false;
+        });
+        if (url != null) {
+          AudioFile audio = AudioFile(
+              fileUrl: url,
+              fileName: file.path.split("/").last,
+              addedBy: AppUser.data.email,
+              addedAt: Timestamp.now());
+          setState(() {
+            isLoading = true;
+          });
+          db.collection("audios").doc(AppUser.data.email).set(audio.toJson());
+          setState(() {
+            isLoading = false;
+            pickedFile = null;
+          });
+          Fluttertoast.showToast(msg: "Song uploaded successfully");
+        }
+      } catch (e) {
+        Fluttertoast.showToast(msg: "Failed to upload");
+      }
+    }
   }
 }
