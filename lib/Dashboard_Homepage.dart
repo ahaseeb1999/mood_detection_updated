@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mood_detectionapp/categories.dart';
 import 'package:mood_detectionapp/choose_mood.dart';
+import 'package:mood_detectionapp/pages/music_by_category.dart';
 import 'package:mood_detectionapp/pages/upload_music.dart';
 
 import 'Emotion_detection.dart';
@@ -74,17 +75,17 @@ class _DashBoardHomePageState extends State<DashBoardHomePage> {
                           ? Get.to(UploadMusic())
                           : index == 1
                               ? getImage()
-                              : Get.to(Categories(
-                                  title: index == 2
-                                      ? "Categories"
-                                      : index == 3
+                              : index == 2
+                                  ? Get.to(MusicByCategory())
+                                  : Get.to(Categories(
+                                      title: index == 3
                                           ? "Upload Music"
                                           : index == 4
                                               ? Get.to(play_music())
                                               : Get.to(choose_mood(
                                                   title: "choose mood",
                                                 )),
-                                ));
+                                    ));
                 },
                 child: Padding(
                   padding: EdgeInsets.all(8.0),

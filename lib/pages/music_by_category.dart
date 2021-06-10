@@ -52,6 +52,7 @@ class _MusicByCategoryState extends State<MusicByCategory> {
       padding: EdgeInsets.symmetric(horizontal: Get.width * 0.04),
       child: Row(
         children: [
+          Expanded(child: Icon(Icons.play_circle_outline)),
           Expanded(
               flex: 3,
               child: Column(
@@ -62,15 +63,17 @@ class _MusicByCategoryState extends State<MusicByCategory> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        a.fileName,
+                      Expanded(
+                        child: Text(
+                          a.fileName,
+                        ),
                       ),
                     ],
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 6),
                     child: Text(
-                      a.addedAt.toDate() ?? "",
+                      a.addedAt.toDate().toString() ?? "",
                     ),
                   ),
                 ],

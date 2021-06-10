@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:mood_detectionapp/models/audio.dart';
 import 'package:mood_detectionapp/services/file_picker.dart';
 import 'package:mood_detectionapp/services/firestorage_service.dart';
@@ -34,9 +35,7 @@ class _UploadMusicState extends State<UploadMusic> {
             )
           : Padding(
               padding: const EdgeInsets.all(24.0),
-              child: Column(
-                children: [pickedFile == null ? picker() : picked()],
-              ),
+              child: picker(),
             ),
     );
   }
@@ -46,7 +45,7 @@ class _UploadMusicState extends State<UploadMusic> {
       children: [
         Text("Select category below to upload music"),
         Expanded(
-          child: ListView(
+          child: Column(
             children: List.generate(allCategories.length, (index) {
               return ListTile(
                 title: Text(allCategories[index]),
@@ -62,8 +61,6 @@ class _UploadMusicState extends State<UploadMusic> {
     );
   }
 
-  Widget picked() {}
-
   //functions
   onUploadTapped() async {
     File file = await _filePicker.pickSingleFile();
@@ -72,6 +69,8 @@ class _UploadMusicState extends State<UploadMusic> {
         setState(() {
           isLoading = true;
         });
+        Get.snackbar("Uploading...", "Your file is being uploaded...",
+            showProgressIndicator: true, duration: Duration(seconds: 3));
         String url = await _storageServices.uploadSingleFile(
             bucketName: 'audios', userEmail: AppUser.data.email, file: file);
         setState(() {
