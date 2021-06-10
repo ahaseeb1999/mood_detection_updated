@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:mood_detectionapp/models/audio.dart';
 import 'package:mood_detectionapp/utils/global.dart';
 
@@ -50,35 +51,28 @@ class _MusicByCategoryState extends State<MusicByCategory> {
   Widget audioItem(AudioFile a) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: Get.width * 0.04),
-      child: Row(
-        children: [
-          Expanded(child: Icon(Icons.play_circle_outline)),
-          Expanded(
-              flex: 3,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: Text(
-                          a.fileName,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 6),
-                    child: Text(
-                      a.addedAt.toDate().toString() ?? "",
-                    ),
-                  ),
-                ],
-              )),
-        ],
+      child: ListTile(
+        isThreeLine: true,
+        onTap: () {},
+        leading: Icon(
+          Icons.play_circle_outline,
+          size: 48,
+        ),
+        title: Text(
+          a.fileName,
+          maxLines: 3,
+          overflow: TextOverflow.ellipsis,
+        ),
+        subtitle: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 6),
+          child: Text(
+            DateFormat("dd-mm-yyyy hh:mm a").format(a.addedAt.toDate()),
+            style: TextStyle(fontSize: 10),
+          ),
+        ),
+        trailing: Text(
+          a.category ?? "",
+        ),
       ),
     );
   }

@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mood_detectionapp/services/tflite_services.dart';
-import 'package:tflite/tflite.dart';
 
 class Emotion_detection extends StatefulWidget {
   @override
@@ -50,31 +49,36 @@ class _Emotion_detectionState extends State<Emotion_detection> {
     // TODO: implement dispose
     super.dispose();
     // helps avoid memory leaks
-    Tflite.close();
+    tfLite.dispose();
   }
 
   // Function to pick image - using camera
   pickImage() async {
     // load image from source - camera/gallery
-    var image = await picker.getImage(source: ImageSource.camera);
+    var image =
+        await picker.getImage(source: ImageSource.camera, imageQuality: 50);
     // check if error laoding image
+
     if (image == null) return null;
     setState(() {
       _image = File(image.path);
     });
 
     // classify image
+    tfLite.loadModel();
     classifyImage(_image);
   }
 
   // Function to pick image - using gallery
   pickGalleryImage() async {
     // load image from source - camera/gallery
-    var image = await picker.getImage(source: ImageSource.gallery);
+    PickedFile image =
+        await picker.getImage(source: ImageSource.gallery, imageQuality: 50);
     // check if error laoding image
     if (image == null) return null;
     setState(() {
       _image = File(image.path);
+      print(_image.path);
     });
 
     // classify image
@@ -119,6 +123,9 @@ class _Emotion_detectionState extends State<Emotion_detection> {
                       width: 280,
                       child: Column(
                         children: [
+                          /* _image != null
+                              ? Image.file(_image)
+                              :*/
                           Image.asset('assets/cat.jpg'),
                           SizedBox(
                             height: 50,

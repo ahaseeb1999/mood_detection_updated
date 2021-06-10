@@ -15,11 +15,16 @@ class TfLiteServices {
   Future<List<dynamic>> runOnImage(File image) async {
     var output = await Tflite.runModelOnImage(
         path: image.path,
-        numResults: 10,
+        numResults: 20,
         threshold: 0.5,
         imageMean: 127.5,
-        imageStd: 127.5,
+        imageStd: 1.0,
         asynch: true);
+    print("Image pred = $output");
     return output;
+  }
+
+  void dispose() {
+    Tflite.close();
   }
 }

@@ -81,11 +81,15 @@ class _UploadMusicState extends State<UploadMusic> {
               fileUrl: url,
               fileName: file.path.split("/").last,
               addedBy: AppUser.data.email,
-              addedAt: Timestamp.now());
+              addedAt: Timestamp.now(),
+              category: seletedCat);
           setState(() {
             isLoading = true;
           });
-          db.collection("audios").doc(AppUser.data.email).set(audio.toJson());
+          String docId = Timestamp.now()
+              .millisecondsSinceEpoch
+              .toString(); // to make every document unique
+          db.collection("audios").doc(docId).set(audio.toJson());
           setState(() {
             isLoading = false;
             pickedFile = null;

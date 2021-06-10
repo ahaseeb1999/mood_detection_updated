@@ -1,7 +1,9 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:tflite/tflite.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mood_detectionapp/services/tflite_services.dart';
+import 'package:tflite/tflite.dart';
 
 class Detect_Gallery_Image extends StatefulWidget {
   @override
@@ -15,6 +17,8 @@ class _Detect_Gallery_ImageState extends State<Detect_Gallery_Image> {
   File _image;
   // variable to store tflite results
   List _output;
+
+  TfLiteServices tf = TfLiteServices();
   // variable to load image
   final picker = ImagePicker();
   int padSize;
@@ -124,39 +128,39 @@ class _Detect_Gallery_ImageState extends State<Detect_Gallery_Image> {
             Center(
               child: _loading
                   ? Container(
-                width: 280,
-                child: Column(
-                  children: [
-                    Image.asset('assets/cat.jpg'),
-                    SizedBox(
-                      height: 50,
+                      width: 280,
+                      child: Column(
+                        children: [
+                          Image.asset('assets/cat.jpg'),
+                          SizedBox(
+                            height: 50,
+                          )
+                        ],
+                      ),
                     )
-                  ],
-                ),
-              )
                   : Container(
-                child: Column(
-                  children: [
-                    Container(
-                      height: 250,
-                      child: Image.file(_image),
+                      child: Column(
+                        children: [
+                          Container(
+                            height: 250,
+                            child: Image.file(_image),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          _output != null
+                              ? Text(
+                                  'Predicted Label: ${_output[0]['label']}',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 20),
+                                )
+                              : Container(),
+                          SizedBox(
+                            height: 10,
+                          )
+                        ],
+                      ),
                     ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _output != null
-                        ? Text(
-                      'Predicted Label: ${_output[0]['label']}',
-                      style: TextStyle(
-                          color: Colors.white, fontSize: 20),
-                    )
-                        : Container(),
-                    SizedBox(
-                      height: 10,
-                    )
-                  ],
-                ),
-              ),
             ),
             Container(
               width: MediaQuery.of(context).size.width,
@@ -168,7 +172,7 @@ class _Detect_Gallery_ImageState extends State<Detect_Gallery_Image> {
                       width: MediaQuery.of(context).size.width - 150,
                       alignment: Alignment.center,
                       padding:
-                      EdgeInsets.symmetric(horizontal: 24, vertical: 17),
+                          EdgeInsets.symmetric(horizontal: 24, vertical: 17),
                       decoration: BoxDecoration(
                         color: Color(0xFFE99600),
                         borderRadius: BorderRadius.circular(6),
@@ -188,7 +192,7 @@ class _Detect_Gallery_ImageState extends State<Detect_Gallery_Image> {
                       width: MediaQuery.of(context).size.width - 150,
                       alignment: Alignment.center,
                       padding:
-                      EdgeInsets.symmetric(horizontal: 24, vertical: 17),
+                          EdgeInsets.symmetric(horizontal: 24, vertical: 17),
                       decoration: BoxDecoration(
                         color: Color(0xFFE99600),
                         borderRadius: BorderRadius.circular(6),
