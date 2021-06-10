@@ -189,15 +189,15 @@ class _LoginScreenState extends State<LoginScreen> {
     });
   }
 
-  void getDataFromDB(FirebaseUser user, String email) {
-    Firestore.instance
+  void getDataFromDB(User user, String email) {
+    FirebaseFirestore.instance
         .collection('Users')
-        .document(email ?? user.email)
+        .doc(email ?? user.email)
         .get()
         .then((d) {
       if (d.data != null) {
-        User.userData.userEmail = d.data['user_email'];
-        User.userData.userName = d.data['user_name'];
+        UserData.userData.userEmail = d.data()['user_email'];
+        UserData.userData.userName = d.data()['user_name'];
       } else {
         Fluttertoast.showToast(
           msg: "Please SignUp First",

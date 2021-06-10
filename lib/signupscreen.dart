@@ -350,8 +350,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
   }
 
-  void createUserDatabase(FirebaseUser user, String username) async {
-    Firestore.instance.collection('Users').document(emailCont.text).setData({
+  void createUserDatabase(User user, String username) async {
+    FirebaseFirestore.instance.collection('Users').doc(emailCont.text).set({
       'created_at': Timestamp.now(),
       'user_name': userNameCont.text,
       'user_email': emailCont.text,
@@ -376,15 +376,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
     });
   }
 
-  void getDataFromDB(FirebaseUser user, String email) {
-    Firestore.instance
+  void getDataFromDB(User user, String email) {
+    FirebaseFirestore.instance
         .collection('Users')
-        .document(email ?? user.email)
+        .doc(email ?? user.email)
         .get()
         .then((d) {
       if (d.data != null) {
-        User.userData.userEmail = d.data['user_email'];
-        User.userData.userName = d.data['user_name'];
+        UserData.userData.userEmail = d.data()['user_email'];
+        UserData.userData.userName = d.data()['user_name'];
       } else {
         Fluttertoast.showToast(
           msg: "Please SignUp First",

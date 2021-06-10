@@ -5,6 +5,8 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mood_detectionapp/categories.dart';
 import 'package:mood_detectionapp/choose_mood.dart';
+import 'package:mood_detectionapp/pages/upload_music.dart';
+
 import 'Emotion_detection.dart';
 /*
 import 'main.dart';
@@ -68,17 +70,21 @@ class _DashBoardHomePageState extends State<DashBoardHomePage> {
                 onTap: () {
                   index == 0
                       ? Get.to(Emotion_detection())
-                      : index == 1
-                      ? getImage()
-                      : Get.to(Categories(
-                    title: index == 2
-                        ? "Categories"
-                        : index == 3
-                        ? "Upload Music"
-                        : index == 4
-                        ? Get.to(play_music())
-                        : Get.to(choose_mood()),
-                  ));
+                      : index == 3
+                          ? Get.to(UploadMusic())
+                          : index == 1
+                              ? getImage()
+                              : Get.to(Categories(
+                                  title: index == 2
+                                      ? "Categories"
+                                      : index == 3
+                                          ? "Upload Music"
+                                          : index == 4
+                                              ? Get.to(play_music())
+                                              : Get.to(choose_mood(
+                                                  title: "choose mood",
+                                                )),
+                                ));
                 },
                 child: Padding(
                   padding: EdgeInsets.all(8.0),
@@ -89,81 +95,81 @@ class _DashBoardHomePageState extends State<DashBoardHomePage> {
                       children: <Widget>[
                         (index == 1 && _image != null)
                             ? Stack(
-                          children: [
-                            Container(
-                              height: Get.height * .18,
-                              width: Get.height * .18,
-                              child: Image.file(
-                                _image,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            Align(
-                                alignment: Alignment.topRight,
-                                child: Padding(
-                                  padding: EdgeInsets.only(right: 10),
-                                  child: InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        _image = null;
-                                      });
-                                    },
-                                    child: Icon(
-                                      Icons.cancel,
-                                      color: Colors.red[900],
+                                children: [
+                                  Container(
+                                    height: Get.height * .18,
+                                    width: Get.height * .18,
+                                    child: Image.file(
+                                      _image,
+                                      fit: BoxFit.cover,
                                     ),
                                   ),
-                                ))
-                          ],
-                        )
+                                  Align(
+                                      alignment: Alignment.topRight,
+                                      child: Padding(
+                                        padding: EdgeInsets.only(right: 10),
+                                        child: InkWell(
+                                          onTap: () {
+                                            setState(() {
+                                              _image = null;
+                                            });
+                                          },
+                                          child: Icon(
+                                            Icons.cancel,
+                                            color: Colors.red[900],
+                                          ),
+                                        ),
+                                      ))
+                                ],
+                              )
                             : (index == 0 && _image2 != null)
-                            ? Stack(
-                          children: [
-                            Container(
-                              height: Get.height * .18,
-                              width: Get.height * .18,
-                              child: Image.file(
-                                _image2,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            Align(
-                                alignment: Alignment.topRight,
-                                child: Padding(
-                                  padding: EdgeInsets.only(right: 10),
-                                  child: InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        _image2 = null;
-                                      });
-                                    },
-                                    child: Icon(
-                                      Icons.cancel,
-                                      color: Colors.red[900],
-                                    ),
+                                ? Stack(
+                                    children: [
+                                      Container(
+                                        height: Get.height * .18,
+                                        width: Get.height * .18,
+                                        child: Image.file(
+                                          _image2,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                      Align(
+                                          alignment: Alignment.topRight,
+                                          child: Padding(
+                                            padding: EdgeInsets.only(right: 10),
+                                            child: InkWell(
+                                              onTap: () {
+                                                setState(() {
+                                                  _image2 = null;
+                                                });
+                                              },
+                                              child: Icon(
+                                                Icons.cancel,
+                                                color: Colors.red[900],
+                                              ),
+                                            ),
+                                          ))
+                                    ],
+                                  )
+                                : Image.asset(
+                                    assets[index],
+                                    height: 50,
+                                    width: 50,
                                   ),
-                                ))
-                          ],
-                        )
-                            : Image.asset(
-                          assets[index],
-                          height: 50,
-                          width: 50,
-                        ),
                         (index == 1 && _image != null)
                             ? SizedBox()
                             : (index == 0 && _image2 != null)
-                            ? SizedBox()
-                            : Padding(
-                            padding: EdgeInsets.all(20),
-                            child: Text(
-                              services[index],
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  height: 1.2,
-                                  fontWeight: FontWeight.bold),
-                              textAlign: TextAlign.center,
-                            )),
+                                ? SizedBox()
+                                : Padding(
+                                    padding: EdgeInsets.all(20),
+                                    child: Text(
+                                      services[index],
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          height: 1.2,
+                                          fontWeight: FontWeight.bold),
+                                      textAlign: TextAlign.center,
+                                    )),
                       ],
                     ),
                   ),

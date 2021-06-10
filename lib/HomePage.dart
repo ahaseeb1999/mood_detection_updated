@@ -39,29 +39,28 @@ class _HomePageState extends State<HomePage> {
   }
 
   void navigatePage() {
-    FirebaseAuth.instance.currentUser().then((val) {
-      if (val != null) {
-        print('\n\n in Splash ${val.email}\n\n');
-        Firestore.instance
-            .collection('Users')
-            .document(val.email)
-            .get()
-            .then((d) {
-          if (d.data != null) {
-            User.userData.userEmail = d.data['user_email'];
-            User.userData.userName = d.data['user_name'];
-          } else {
-            print('new user');
-          }
-        }).then((g) {
-          Get.offAll(Dashboard(), transition: Transition.fadeIn);
-        }).catchError((e) {
+    User val = FirebaseAuth.instance.currentUser;
+    if (val != null) {
+      print('\n\n in Splash ${val.email}\n\n');
+      FirebaseFirestore.instance
+          .collection('Users')
+          .doc(val.email)
+          .get()
+          .then((d) {
+        if (d.data != null) {
+          UserData.userData.userEmail = d.data()['user_email'];
+          UserData.userData.userName = d.data()['user_name'];
+        } else {
           print('new user');
-        });
-      } else {
+        }
+      }).then((g) {
+        Get.offAll(Dashboard(), transition: Transition.fadeIn);
+      }).catchError((e) {
         print('new user');
-      }
-    });
+      });
+    } else {
+      print('new user');
+    }
   }
 
   @override
@@ -172,7 +171,7 @@ class _HomePageState extends State<HomePage> {
 // return Get.to(SignInDemo());
     GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
     GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-    AuthCredential credential = GoogleAuthProvider.getCredential(
+    AuthCredential credential = GoogleAuthProvider.credential(
         idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
     try {
 /* User user =*/ await FirebaseAuth.instance
@@ -199,15 +198,15 @@ class _HomePageState extends State<HomePage> {
     return '';
   }
 
-  void getDataFromDB(FirebaseUser user, String email) {
-    Firestore.instance
+  void getDataFromDB(User user, String email) {
+    FirebaseFirestore.instance
         .collection('Users')
-        .document(email ?? user.email)
+        .doc(email ?? user.email)
         .get()
         .then((d) {
       if (d.data != null) {
-        User.userData.userEmail = d.data['user_email'];
-        User.userData.userName = d.data['user_name'];
+        UserData.userData.userEmail = d.data()['user_email'];
+        UserData.userData.userName = d.data()['user_name'];
       } else {
         Fluttertoast.showToast(
           msg: "Please SignUp First",

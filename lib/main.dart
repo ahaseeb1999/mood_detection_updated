@@ -1,12 +1,16 @@
+import 'package:firebase_core/firebase_core.dart';
 import "package:flutter/material.dart";
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:mood_detectionapp/Emotion_detection.dart';
 
 import 'HomePage.dart';
-import 'Emotion_detection.dart';
+
 //void main()=>runApp(MaterialApp(home: HomePage(),));
-void main() => runApp(play_music());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(play_music());
+}
 
 class play_music extends StatelessWidget {
   @override
