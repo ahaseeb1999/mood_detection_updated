@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "173989919517",
+    "project_id": "mood-detection-based-player",
+    "storage_bucket": "mood-detection-based-player.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:173989919517:android:d06d30cef468cfb6453ff4",
+        "android_client_info": {
+          "package_name": "com.abdul.mooddetection"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "173989919517-jgse11io6abgiperh6qbu8e8donms920.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.abdul.mooddetection",
+            "certificate_hash": "ba33010cc38337c4678bfb55fee4ee5e8631740a"
+          }
+        },
+        {
+          "client_id": "173989919517-a808nhappf5saoscrootqd01gq77hiac.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDPTHcQLTKQz-wA-dL3ZRWQLBu3niRxU8k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "173989919517-a808nhappf5saoscrootqd01gq77hiac.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
