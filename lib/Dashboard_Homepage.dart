@@ -9,10 +9,6 @@ import 'package:mooddetection/pages/music_by_category.dart';
 import 'package:mooddetection/pages/upload_music.dart';
 
 import 'Emotion_detection.dart';
-/*
-import 'main.dart';
-*/
-import 'play_music.dart';
 
 class DashBoardHomePage extends StatefulWidget {
   @override
@@ -70,18 +66,22 @@ class _DashBoardHomePageState extends State<DashBoardHomePage> {
               return InkWell(
                 onTap: () {
                   index == 0
-                      ? Get.to(Emotion_detection())
+                      ? Get.to(Emotion_detection(
+                          imageSource: ImageSource.camera,
+                        ))
                       : index == 3
                           ? Get.to(UploadMusic())
                           : index == 1
-                              ? getImage()
+                              ? Get.to(Emotion_detection(
+                                  imageSource: ImageSource.gallery,
+                                ))
                               : index == 2
                                   ? Get.to(MusicByCategory())
                                   : Get.to(Categories(
                                       title: index == 3
                                           ? "Upload Music"
                                           : index == 4
-                                              ? Get.to(MusicApp())
+                                              ? Get.to(MusicByCategory())
                                               : Get.to(choose_mood(
                                                   title: "choose mood",
                                                 )),

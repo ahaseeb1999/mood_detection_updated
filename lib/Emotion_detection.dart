@@ -7,6 +7,8 @@ import 'package:mooddetection/pages/music_by_category.dart';
 import 'package:mooddetection/services/tflite_services.dart';
 
 class Emotion_detection extends StatefulWidget {
+  final ImageSource imageSource;
+  Emotion_detection({@required this.imageSource});
   @override
   _Emotion_detectionState createState() => _Emotion_detectionState();
 }
@@ -23,12 +25,20 @@ class _Emotion_detectionState extends State<Emotion_detection> {
   // variable to load image
   final picker = ImagePicker();
   int padSize;
+  ImageSource imgSource;
+
+  onInit() async {
+    await tfLite.loadModel();
+    await Future.delayed(Duration(milliseconds: 20), () {
+      imgSource = widget.imageSource;
+      pickImage();
+    });
+  }
 
   @override
   void initState() {
     super.initState();
-    // load TFLite Model
-    tfLite.loadModel();
+    onInit();
   }
 
   // Function to perform TFLite Inference
@@ -57,11 +67,10 @@ class _Emotion_detectionState extends State<Emotion_detection> {
   // Function to pick image - using camera
   pickImage() async {
     // load image from source - camera/gallery
-    var image =
-        await picker.getImage(source: ImageSource.camera, imageQuality: 50);
+    var image = await picker.getImage(source: imgSource, imageQuality: 50);
     // check if error laoding image
 
-    if (image == null) return null;
+    if (image == null) return Navigator.pop(context);
     setState(() {
       _image = File(image.path);
     });
@@ -72,20 +81,20 @@ class _Emotion_detectionState extends State<Emotion_detection> {
   }
 
   // Function to pick image - using gallery
-  pickGalleryImage() async {
-    // load image from source - camera/gallery
-    PickedFile image =
-        await picker.getImage(source: ImageSource.gallery, imageQuality: 50);
-    // check if error laoding image
-    if (image == null) return null;
-    setState(() {
-      _image = File(image.path);
-      print(_image.path);
-    });
-
-    // classify image
-    classifyImage(_image);
-  }
+  // pickGalleryImage() async {
+  //   // load image from source - camera/gallery
+  //   PickedFile image =
+  //       await picker.getImage(source: ImageSource.gallery, imageQuality: 50);
+  //   // check if error laoding image
+  //   if (image == null) return null;
+  //   setState(() {
+  //     _image = File(image.path);
+  //     print(_image.path);
+  //   });
+  //
+  //   // classify image
+  //   classifyImage(_image);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -187,7 +196,10 @@ class _Emotion_detectionState extends State<Emotion_detection> {
               child: Column(
                 children: [
                   GestureDetector(
-                    onTap: pickImage,
+                    onTap: () {
+                      imgSource = ImageSource.camera;
+                      pickImage();
+                    },
                     child: Container(
                       width: MediaQuery.of(context).size.width - 150,
                       alignment: Alignment.center,
@@ -207,7 +219,10 @@ class _Emotion_detectionState extends State<Emotion_detection> {
                     height: 20,
                   ),
                   GestureDetector(
-                    onTap: pickGalleryImage,
+                    onTap: () {
+                      imgSource = ImageSource.gallery;
+                      pickImage();
+                    },
                     child: Container(
                       width: MediaQuery.of(context).size.width - 150,
                       alignment: Alignment.center,

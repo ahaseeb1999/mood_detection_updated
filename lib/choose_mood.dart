@@ -1,5 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:mooddetection/pages/music_by_category.dart';
+import 'package:mooddetection/utils/global.dart';
+
 import 'notification.dart';
 
 class choose_mood extends StatefulWidget {
@@ -14,7 +18,6 @@ class choose_mood extends StatefulWidget {
 }
 
 class _choose_moodState extends State<choose_mood> {
-
   final notifications = [
     NotificationSetting(title: 'Happy'),
     NotificationSetting(title: 'Sad'),
@@ -32,39 +35,43 @@ class _choose_moodState extends State<choose_mood> {
       ),
       body: Container(
         padding: EdgeInsets.only(left: 20, top: 100, right: 0),
-        child: ListView(
-          children: [
-            ...notifications.map(buildSingleCheckbox).toList(),
-          ],
-        ),
+        child: Column(
+            children: List.generate(
+                allCategories.length,
+                (index) => ListTile(
+                      onTap: () {
+                        Get.to(MusicByCategory(
+                          initialCat: allCategories[index],
+                        ));
+                      },
+                      leading: Checkbox(
+                        value: false,
+                        onChanged: (value) => print(value),
+                      ),
+                      title: Text(
+                        allCategories[index],
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                    ))),
       ),
     );
   }
-  Widget buildSingleCheckbox(NotificationSetting notification) => buildCheckbox(
-    notification: notification,
-    onClicked: () {
-      setState(() {
-        final newValue = !notification.value;
-        notification.value = newValue;
-
-      });
-    },
-  );
-
-  Widget buildCheckbox({
-    @required NotificationSetting notification,
-    @required VoidCallback onClicked,
-  }) =>
-      ListTile(
-        onTap: onClicked,
-        leading: Checkbox(
-          value: notification.value,
-          onChanged: (value) => onClicked(),
-        ),
-        title: Text(
-          notification.title,
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-        ),
-      );
 }
 
+// Widget buildSingleCheckbox(String notification) => buildCheckbox(
+//       notification: notification,
+//       onClicked: () {
+//         setState(() {
+//           final newValue = !notification.value;
+//           notification.value = newValue;
+//         });
+//       },
+//     );
+
+//   Widget buildCheckbox({
+//     @required String notification,
+//     @required VoidCallback onClicked,
+//   }) =>
+//
+// }

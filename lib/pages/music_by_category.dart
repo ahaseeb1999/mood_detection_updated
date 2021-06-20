@@ -8,7 +8,7 @@ import 'package:mooddetection/utils/global.dart';
 
 class MusicByCategory extends StatefulWidget {
   final initialCat;
-  MusicByCategory({this.initialCat = ""});
+  MusicByCategory({this.initialCat});
   @override
   _MusicByCategoryState createState() => _MusicByCategoryState();
 }
@@ -27,13 +27,18 @@ class _MusicByCategoryState extends State<MusicByCategory> {
         stream: db
             .collection("audios")
             .where("added_by", isEqualTo: AppUser.data.email)
-            .where("category", isEqualTo: null)
+            .where("category", isEqualTo: widget.initialCat)
             .orderBy("added_at")
             .snapshots(),
         builder: (BuildContext context,
             AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
           if (!snapshot.hasData) {
             return Container();
+          } else if (snapshot.data.docs.isEmpty) {
+            return Center(
+              child: Text(
+                  "No Music Found in ${widget.initialCat ?? "any"} category"),
+            );
           } else {
             return ListView.separated(
                 itemBuilder: (context, index) {

@@ -1,5 +1,7 @@
+import 'package:audioplayers/audio_cache.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:mooddetection/widgets/player_widget.dart';
 
 class MusicApp extends StatefulWidget {
   final String url;
@@ -11,13 +13,14 @@ class MusicApp extends StatefulWidget {
 class _MusicAppState extends State<MusicApp> {
   //we will need some variables
   bool playing = false; // at the begining we are not playing any song
+  bool loading = true; // to show loading while music is being fetched
   IconData playBtn = Icons.play_arrow; // the main state of the play button icon
 
   //Now let's start by creating our music player
   //first let's declare some object
   AudioPlayer _player;
   // AudioCache cache;
-
+  AudioCache _audioCache = AudioCache();
   Duration position = new Duration();
   Duration musicLength = new Duration();
   int totalDuration = 0;
@@ -38,19 +41,60 @@ class _MusicAppState extends State<MusicApp> {
     );
   }
 
+  // Future<int> _getDuration() async {
+  //   final uri = await _audioCache.(widget.url);
+  //   await _player.setUrl(uri.toString());
+  //   return Future.delayed(
+  //     const Duration(seconds: 2),
+  //     () => _player.getDuration(),
+  //   );
+  // }
+
   //let's create the seek function that will allow us to go to a certain position of the music
   void seekToSec(int sec) {
     Duration newPos = Duration(seconds: sec);
     _player.seek(newPos);
   }
 
+  // void play() async {
+  //   print("this is url: ${widget.url}");
+  //   int result = await _player.play(widget.url);
+  //   if (result == 1) {
+  //     // totalDuration = await _getDuration();
+  //     setState(() {
+  //       // print(totalDuration);
+  //       // musicLength = Duration(seconds: dur);
+  //       playBtn = Icons.pause;
+  //       playing = true;
+  //       loading = false;
+  //       // musicLength = Duration(minutes: dur);
+  //     });
+  //   }
+  //   var d = _player.onDurationChanged;
+  //   d.listen((event) {
+  //     print(event.inMilliseconds);
+  //   });
+  // }
+  //
+  // void pause() {
+  //   _player.pause();
+  //   setState(() {
+  //     playBtn = Icons.play_arrow;
+  //     playing = false;
+  //   });
+  // }
+
+  void onInit() {
+    // play();
+  }
+
   //Now let's initialize our player
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _player = AudioPlayer(mode: PlayerMode.MEDIA_PLAYER);
-    // cache = AudioCache(fixedPlayer: _player);
+
+    onInit();
 
     //now let's handle the audioplayer time
 
@@ -160,81 +204,9 @@ class _MusicAppState extends State<MusicApp> {
                         //Let's start by adding the controller
                         //let's add the time indicator text
 
-                        Container(
-                          width: 500.0,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                "${position.inMinutes}:${position.inSeconds.remainder(60)}",
-                                style: TextStyle(
-                                  fontSize: 18.0,
-                                ),
-                              ),
-                              slider(),
-                              Text(
-                                "${musicLength.inMinutes}:${musicLength.inSeconds.remainder(60)}",
-                                style: TextStyle(
-                                  fontSize: 18.0,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            IconButton(
-                              iconSize: 45.0,
-                              color: Colors.blue,
-                              onPressed: () {},
-                              icon: Icon(
-                                Icons.skip_previous,
-                              ),
-                            ),
-                            IconButton(
-                              iconSize: 62.0,
-                              color: Colors.blue[800],
-                              onPressed: () async {
-                                //here we will add the functionality of the play button
-                                if (!playing) {
-                                  //now let's play the song
-                                  print("this is url: ${widget.url}");
-                                  _player.play(widget.url);
-                                  var d = _player.onDurationChanged;
-                                  d.listen((event) {
-                                    print(event.inMilliseconds);
-                                  });
-                                  int dur = await _player.getDuration();
-                                  print("Duration = $dur");
-                                  setState(() {
-                                    playBtn = Icons.pause;
-                                    playing = true;
-                                    // musicLength = Duration(minutes: dur);
-                                  });
-                                } else {
-                                  _player.pause();
-                                  setState(() {
-                                    playBtn = Icons.play_arrow;
-                                    playing = false;
-                                  });
-                                }
-                              },
-                              icon: Icon(
-                                playBtn,
-                              ),
-                            ),
-                            IconButton(
-                              iconSize: 45.0,
-                              color: Colors.blue,
-                              onPressed: () {},
-                              icon: Icon(
-                                Icons.skip_next,
-                              ),
-                            ),
-                          ],
+                        PlayerWidget(
+                          url: widget.url,
+                          mode: PlayerMode.MEDIA_PLAYER,
                         )
                       ],
                     ),
