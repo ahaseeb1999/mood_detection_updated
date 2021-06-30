@@ -16,12 +16,13 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        // all of the main screens in the dashboard will use the same appbar, no need to code appbar in new pages
         backgroundColor: Colors.red[900],
         title: Text(_currentIndex == 0
             ? 'Dashboard'
             : _currentIndex == 1
                 ? 'Profile'
-                : Get.to(contact())),
+                : 'Contact'),
         elevation: 0,
       ),
       backgroundColor: Colors.white,
@@ -48,6 +49,20 @@ class _DashboardState extends State<Dashboard> {
   }
 
   getBodyWidget() {
-    return (_currentIndex == 0) ? DashBoardHomePage() : Container();
+    // page navigation, add your pages here according to index
+
+    // return (_currentIndex == 0) ? DashBoardHomePage() : Container();
+    switch (_currentIndex) {
+      case 0:
+        return DashBoardHomePage();
+        break;
+      case 1:
+        return DashBoardHomePage(); // replace it with profile page when completed
+        break;
+      case 2:
+        return Contact();
+        break;
+      // case 3:return DashBoardHomePage();break;
+    }
   }
 }

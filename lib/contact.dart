@@ -1,28 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:mooddetection/Dashboard_Homepage.dart';
 
-class contact extends StatefulWidget {
+class Contact extends StatefulWidget {
   @override
-  _contactState createState() => _contactState();
+  _ContactState createState() => _ContactState();
 }
 
-class _contactState extends State<contact> {
+class _ContactState extends State<Contact> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context,
-                MaterialPageRoute(builder: (_) => DashBoardHomePage()));
-          },
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.white,
-          ),
-        ),
-        title: Text('Contact'),
-      ),
+      // appBar: AppBar(
+      //   leading: IconButton(
+      //     onPressed: () {
+      //       Navigator.pop(context,
+      //           MaterialPageRoute(builder: (_) => DashBoardHomePage()));
+      //     },
+      //     icon: Icon(
+      //       Icons.arrow_back,
+      //       color: Colors.white,
+      //     ),
+      //   ),
+      //   title: Text('Contact'),
+      // ),
       body: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
